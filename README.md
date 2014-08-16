@@ -112,7 +112,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
       };
     }
     
-    function MainCtrl() {
+    function MainCtrlTwo() {
       var self = this;
       self.someObject = {};
       self.doSomething = function() {
@@ -121,31 +121,8 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
   - Only use `$scope` in `controllerAs` when necessary; for example, publishing and subscribing events using `$emit`, `$broadcast`, `$on` or `$watch`. Try to limit the use of these, however, and treat `$scope` as a special use case
 
-  - **Inheritance**: Use prototypal inheritance when extending controller classes
-
-    ```javascript
-    function BaseCtrl () {
-      this.doSomething = function () {
-
-      };
-    }
-    BaseCtrl.prototype.someObject = {};
-    BaseCtrl.prototype.sharedSomething = function () {
-
-    };
-
-    AnotherCtrl.prototype = Object.create(BaseCtrl.prototype);
-
-    function AnotherCtrl () {
-      this.anotherSomething = function () {
-
-      };
-    }
-    ```
-
-  - Use `Object.create` with a polyfill for browser support
-
-  - **controllerAs 'vm'**: Capture the `this` context of the Controller using `vm`, standing for `ViewModel`
+  
+  - **controllerAs 'self'**: Capture the `this` context of the Controller using `self (this is further explanation of MainCtrlTwo() in the example above)
 
     ```javascript
     // avoid
@@ -157,8 +134,8 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
     // recommended
     function MainCtrl (SomeService) {
-      var vm = this;
-      vm.doSomething = SomeService.doSomething;
+      var self = this;
+      self.doSomething = SomeService.doSomething;
     }
     ```
 
