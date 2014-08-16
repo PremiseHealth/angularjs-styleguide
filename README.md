@@ -189,21 +189,13 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
     *Why?* : Controllers should fetch Model data from Services, avoiding any Business logic. Controllers should act as a ViewModel and control the data flowing between the Model and the View presentational layer. Business logic in Controllers makes testing Services impossible.
 
-  - **Avoid DOM manipulation in controllers**. In most cases, DOM manipulation should be done in directives.
-  
-  ```javascript
-    // avoid
-    function MainCtrl() {
-      angular.element('#someId).addClass('someClass');
-    }
-  ```
 **[Back to top](#table-of-contents)**
 
 ## Services and Factory
 
   - All Angular Services are singletons, using `.service()` or `.factory()` differs the way Objects are created.
 
-  **Services**: act as a `constructor` function and are instantiated with the `new` keyword. Use `this` for public methods and variables
+  **Services**: act as a `constructor` function and are instantiated with the `new` keyword. Use `this` for public methods and variables (or var self=this, and use self as noted in the Controller As example above)
 
     ```javascript
     function SomeService () {
@@ -256,31 +248,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
   - Comment and class name declarations are confusing and should be avoided. Comments do not play nicely with older versions of IE. Using an attribute is the safest method for browser coverage.
 
-  - **Templating**: Use `Array.join('')` for clean templating
-
-    ```javascript
-    // avoid
-    function someDirective () {
-      return {
-        template: '<div class="some-directive">' +
-          '<h1>My directive</h1>' +
-        '</div>'
-      };
-    }
-
-    // recommended
-    function someDirective () {
-      return {
-        template: [
-          '<div class="some-directive">',
-            '<h1>My directive</h1>',
-          '</div>'
-        ].join('')
-      };
-    }
-    ```
-
-    *Why?* : Improves readability as code can be indented properly, it also avoids the `+` operator which is less clean and can lead to errors if used incorrectly to split lines
+  - **Templating**: TODO
 
   - **DOM manipulation**: Takes place only inside Directives, never a controller/service
 
@@ -402,7 +370,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
 ## Routing resolves
 
-  - **Promises**: Resolve Controller dependencies in the `$routeProvider` (or `$stateProvider` for `ui-router`), not the Controller itself
+  - **Promises**: When possible, resolve Controller dependencies in the `$stateProvider`(prefer `ui-router` instead of `ng-route`), not the Controller itself
 
     ```javascript
     // avoid
@@ -420,18 +388,28 @@ A standardised approach for developing AngularJS applications in teams. This sty
       .controller('MainCtrl', MainCtrl);
 
     // recommended
-    function config ($routeProvider) {
-      $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
+    function config ($stateProvider) {
+      $stateProvider
+      .state('main', {
+        url: '/main',
+        controller: 'MainCtrl as mainCtrl',
+        templateUrl: 'pages/main/main.tpl.html'
         resolve: {
           // resolve here
+          locations: function () {
+            return SomeService.getLocations();
         }
       });
     }
     angular
       .module('app')
       .config(config);
+      
+    function MainCtrl (SomeService, locations) {
+      var self = this;
+      self.locations = locations;
+    }
+  
     ```
 
   - **Controller.resolve property**: Never bind logic to the router itself. Reference a `resolve` property for each Controller to couple the logic
@@ -443,14 +421,14 @@ A standardised approach for developing AngularJS applications in teams. This sty
     }
 
     function config ($routeProvider) {
-      $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
+      $stateProvider
+      .state('main', {
+        url: '/main',
         controllerAs: 'main',
         controller: 'MainCtrl'
         resolve: {
-          doSomething: function () {
-            return SomeService.doSomething();
+          locations: function () {
+            return SomeService.getLocations();
           }
         }
       });
