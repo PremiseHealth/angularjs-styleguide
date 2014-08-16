@@ -412,65 +412,10 @@ A standardised approach for developing AngularJS applications in teams. This sty
   
     ```
 
-  - **Controller.resolve property**: Never bind logic to the router itself. Reference a `resolve` property for each Controller to couple the logic
-
-    ```javascript
-    // avoid
-    function MainCtrl (SomeService) {
-      this.something = SomeService.something;
-    }
-
-    function config ($routeProvider) {
-      $stateProvider
-      .state('main', {
-        url: '/main',
-        controllerAs: 'main',
-        controller: 'MainCtrl'
-        resolve: {
-          locations: function () {
-            return SomeService.getLocations();
-          }
-        }
-      });
-    }
-
-    // recommended
-    function MainCtrl (SomeService) {
-      this.something = SomeService.something;
-    }
-
-    MainCtrl.resolve = {
-      doSomething: function (SomeService) {
-        return SomeService.doSomething();
-      }
-    };
-
-    function config ($routeProvider) {
-      $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controllerAs: 'main',
-        controller: 'MainCtrl'
-        resolve: MainCtrl.resolve
-      });
-    }
-    ```
-
-  - This keeps resolve dependencies inside the same file as the Controller and the router free from logic
-
+ 
 **[Back to top](#table-of-contents)**
 
 ## Publish and subscribe events
-
-  - **$scope**: Use the `$emit` and `$broadcast` methods to trigger events to direct relationship scopes only
-
-    ```javascript
-    // up the $scope
-    $scope.$emit('customEvent', data);
-
-    // down the $scope
-    $scope.$broadcast('customEvent', data);
-    ```
 
   - **$rootScope**: Use only `$emit` as an application-wide event bus and remember to unbind listeners
 
