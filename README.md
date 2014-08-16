@@ -71,37 +71,6 @@ A standardised approach for developing AngularJS applications in teams. This sty
     ```
 
   - This aids with readability and reduces the volume of code "wrapped" inside the Angular framework
-  
-  - **IIFE scoping**: To avoid polluting the global scope with our function declarations that get passed into Angular, ensure build tasks wrap the concatenated files inside an IIFE
-  
-    ```javascript
-    (function () {
-
-      angular
-        .module('app', []);
-      
-      // MainCtrl.js
-      function MainCtrl () {
-
-      }
-      
-      angular
-        .module('app')
-        .controller('MainCtrl', MainCtrl);
-      
-      // SomeService.js
-      function SomeService () {
-
-      }
-      
-      angular
-        .module('app')
-        .service('SomeService', SomeService);
-        
-      // ...
-        
-    })();
-    ```
 
 
 **[Back to top](#table-of-contents)**
@@ -135,13 +104,19 @@ A standardised approach for developing AngularJS applications in teams. This sty
       };
     }
 
-    // recommended
+    // recommended use this or self
     function MainCtrl () {
       this.someObject = {};
       this.doSomething = function () {
 
       };
     }
+    
+    function MainCtrl() {
+      var self = this;
+      self.someObject = {};
+      self.doSomething = function() {
+    };
     ```
 
   - Only use `$scope` in `controllerAs` when necessary; for example, publishing and subscribing events using `$emit`, `$broadcast`, `$on` or `$watch`. Try to limit the use of these, however, and treat `$scope` as a special use case
