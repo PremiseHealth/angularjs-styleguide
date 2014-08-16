@@ -122,7 +122,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
   - Only use `$scope` in `controllerAs` when necessary; for example, publishing and subscribing events using `$emit`, `$broadcast`, `$on` or `$watch`. Try to limit the use of these, however, and treat `$scope` as a special use case
 
   
-  - **controllerAs 'self'**: Capture the `this` context of the Controller using `self (this is further explanation of MainCtrlTwo() in the example above)
+  - **controllerAs 'self'**: Capture the `this` context of the Controller using `self' (this is further explanation of MainCtrlTwo() in the example above)
 
     ```javascript
     // avoid
@@ -189,6 +189,14 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
     *Why?* : Controllers should fetch Model data from Services, avoiding any Business logic. Controllers should act as a ViewModel and control the data flowing between the Model and the View presentational layer. Business logic in Controllers makes testing Services impossible.
 
+  - **Avoid DOM manipulation in controllers**. In most cases, DOM manipulation should be done in directives.
+  
+  ```javascript
+    // avoid
+    function MainCtrl() {
+      angular.element('#someId).addClass('someClass');
+    }
+  ```
 **[Back to top](#table-of-contents)**
 
 ## Services and Factory
