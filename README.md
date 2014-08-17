@@ -43,7 +43,20 @@ A standardised approach for developing AngularJS applications in teams. This sty
     function LocationsListingCtrl($scope) {
     }
     ```
-    
+  - **Each module should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
+  
+   ```javascript
+    // recommended
+    function LocationsListingCtrl() {  
+    }  
+   	  
+    module.exports = angular
+      .module('locAdmin.components.locationsListing.locationsListingCtrl', [                           
+        require('./locationsListingService').name  
+      ])  
+      .controller('LocationsListingCtrl', LocationsListingCtrl);
+   ```
+
 ## Modules
 
   - **Definitions**: Declare modules without a variable using the setter and getter syntax
