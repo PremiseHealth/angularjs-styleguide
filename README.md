@@ -179,19 +179,19 @@ A standardised approach for developing AngularJS applications in teams. This sty
     // avoid
     function MainCtrl () {
       
-      var vm = this;
+      var self = this;
 
       $http
         .get('/users')
         .success(function (response) {
-          vm.users = response;
+          self.users = response;
         });
 
       vm.removeUser = function (user, index) {
         $http
           .delete('/user/' + user.id)
           .then(function (response) {
-            vm.users.splice(index, 1);
+            self.users.splice(index, 1);
           });
       };
 
@@ -200,19 +200,19 @@ A standardised approach for developing AngularJS applications in teams. This sty
     // recommended
     function MainCtrl (UserService) {
 
-      var vm = this;
+      var self = this;
 
       UserService
         .getUsers()
         .then(function (response) {
-          vm.users = response;
+          self.users = response;
         });
 
-      vm.removeUser = function (user, index) {
+      self.removeUser = function (user, index) {
         UserService
           .removeUser(user)
           .then(function (response) {
-            vm.users.splice(index, 1);
+            self.users.splice(index, 1);
           });
       };
 
