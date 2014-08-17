@@ -54,7 +54,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
     function LocationsListingCtrl($scope) {
     }
     ```
-  - **^Each module should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
+  - **^Each file should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
   
    ```javascript
     // recommended
@@ -67,6 +67,32 @@ A standardised approach for developing AngularJS applications in teams. This sty
       ])  
       .controller('LocationsListingCtrl', LocationsListingCtrl);
    ```
+  - **^Directory structure**
+    
+    ```
+    /MyProject
+    --/src
+    ----index.html (the index.html for the SPA)
+    ----app.js (the app definition for the Angular app)
+    ----/app
+    ------/components (directives go here)
+    --------/myDirective (directory for myDirective directive
+    ----------myDirective.js (directive file)
+    ----------myDirective.tpl.html (directive template/partial)
+    ----------myDirectiveCtrl.js (the directive's controller)
+    ----------myDirectiveService.js (if directive requires a service, used ONLY be this directive)
+    ----------myDirective.less (LESS file for this directive, if needed)
+    ------/pages (top level pages/views go here. Subdirectories follow the same logic as the directives directory)
+    --------/main (the main page/view)
+    ----------mainCtrl.js (the controller for the main view)
+    ----------main.tpl.html (the template/partial for the main view)
+    ----------main.less (LESS file for the main view)
+    ------/services (shared services, used by multiple controllers, go here)
+    --------mySharedService.js
+    ------/utils (other helper files used throughout the app
+    --------stringUtils.js
+    --------viewUtils.js
+    ```
 
 ## Modules
 
