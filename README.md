@@ -282,7 +282,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
   - **Templating**: TODO
 
-  - **DOM manipulation**: Takes place only inside Directives, never a controller/service
+  - **DOM manipulation**: Takes place only inside Directives (link function), never a controller/service
 
     ```javascript
     // avoid
@@ -363,6 +363,15 @@ A standardised approach for developing AngularJS applications in teams. This sty
       .module('app')
       .directive('dragUpload', dragUpload);
     ```
+  - **Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
+  - Example:
+  ```
+  /components/listing.js (the directive)
+  /components/listing.tpl.html (the template/partial for the directive)
+  /components/listingService.js (if the directive needs a service, used ONLY be this directive)
+  /components/listingCtrl.js (the controller for this directive)
+  ```
+
 
 **[Back to top](#table-of-contents)**
 
