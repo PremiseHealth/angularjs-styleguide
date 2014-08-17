@@ -1,6 +1,6 @@
 # AngularJS styleguide
 
-NOTE: This styleguide is forked from Todd Motto's version and I've left his comments in place below. However, I have removed some things, and added some others.
+NOTE: This styleguide is forked from Todd Motto's version and I've left his comments in place below. However, I have removed some things, and added some others. My additions/modifications are noted with a ^
 
 *Opinionated AngularJS styleguide for teams by [@toddmotto](//twitter.com/toddmotto)*
 
@@ -28,32 +28,32 @@ A standardised approach for developing AngularJS applications in teams. This sty
   1. [Minification and annotation](#minification-and-annotation)
 
 ## General
-  - When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
-  - Don't wrap element inside of $(). All AngularJS elements are already jqobjects.
-  - Do not pollute your $scope. Only add functions and variables that are being used in the templates.
-  - Do not use $ prefix for the names of variables, properties and methods. This prefix is reserved for AngularJS usage.
-  - Use ng-bind or ng-cloak instead of simple {{ }} to prevent a FOUC (Flash of Unrendered Content).
-  - When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
-  - When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
+  - ^When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
+  - ^Don't wrap element inside of $(). All AngularJS elements are already jqobjects.
+  - ^Do not pollute your $scope. Only add functions and variables that are being used in the templates.
+  - ^Do not use $ prefix for the names of variables, properties and methods. This prefix is reserved for AngularJS usage.
+  - ^Use ng-bind or ng-cloak instead of simple {{ }} to prevent a FOUC (Flash of Unrendered Content).
+  - ^When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
+  - ^When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
 
 ## Files
-  - **One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
+  - **^One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
 
-  - **Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
+  - **^Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
    ```javascript
     .module('locAdmin.components.locationsListing.locationsListingCtrl', [
     ]); 
    ```
    
- - **Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
+ - **^Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
  
- - **Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
+ - **^Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
  
     ```javascript
     function LocationsListingCtrl($scope) {
     }
     ```
-  - **Each module should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
+  - **^Each module should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
   
    ```javascript
     // recommended
@@ -164,7 +164,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
   - Only use `$scope` in `controllerAs` when necessary; for example, publishing and subscribing events using `$emit`, `$broadcast`, `$on` or `$watch`. Try to limit the use of these, however, and treat `$scope` as a special use case
 
   
-  - **controllerAs 'self'**: Capture the `this` context of the Controller using `self' (this is further explanation of MainCtrlTwo() in the example above)
+  - **^controllerAs 'self'**: Capture the `this` context of the Controller using `self' (this is further explanation of MainCtrlTwo() in the example above)
 
     ```javascript
     // avoid
@@ -290,7 +290,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
   - Comment and class name declarations are confusing and should be avoided. Comments do not play nicely with older versions of IE. Using an attribute is the safest method for browser coverage.
 
-  - **Templating**: Use external templates instead of inline string templates for larger html blocks. These templates should be stored in Angular’s template cache. Inline String templates should only be 	used in rare circumstances (when the template is very short)
+  - **^Templating**: Use external templates instead of inline string templates for larger html blocks. These templates should be stored in Angular’s template cache. Inline String templates should only be 	used in rare circumstances (when the template is very short)
 
   - **DOM manipulation**: Takes place only inside Directives (link function), never a controller/service
 
@@ -373,7 +373,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
       .module('app')
       .directive('dragUpload', dragUpload);
     ```
-  - **Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
+  - **^Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
   - Example:
   
   ```
@@ -382,7 +382,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
   /components/listingService.js (if the directive needs a service, used ONLY be this directive)
   /components/listingCtrl.js (the controller for this directive)
   ```
-  - **Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
+  - **^Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
 
 **[Back to top](#table-of-contents)**
 
@@ -422,7 +422,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
 ## Routing resolves
 
-  - **Promises**: When possible, resolve Controller dependencies in the `$stateProvider`(prefer `ui-router` instead of `ng-route`), not the Controller itself
+  - **^Promises**: When possible, resolve Controller dependencies in the `$stateProvider`(prefer `ui-router` instead of `ng-route`), not the Controller itself
 
     ```javascript
     // avoid
