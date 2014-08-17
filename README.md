@@ -280,7 +280,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
   - Comment and class name declarations are confusing and should be avoided. Comments do not play nicely with older versions of IE. Using an attribute is the safest method for browser coverage.
 
-  - **Templating**: TODO
+  - **Templating**: Use external templates instead of inline string templates for larger html blocks. These templates should be stored in Angular’s template cache. Inline String templates should only be 	used in rare circumstances (when the template is very short)
 
   - **DOM manipulation**: Takes place only inside Directives (link function), never a controller/service
 
@@ -365,13 +365,14 @@ A standardised approach for developing AngularJS applications in teams. This sty
     ```
   - **Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
   - Example:
+  
   ```
   /components/listing.js (the directive)
   /components/listing.tpl.html (the template/partial for the directive)
   /components/listingService.js (if the directive needs a service, used ONLY be this directive)
   /components/listingCtrl.js (the controller for this directive)
   ```
-
+  - **Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
 
 **[Back to top](#table-of-contents)**
 
