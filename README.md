@@ -13,6 +13,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
 ## Table of Contents
 
+  1. [General](#general)
   1. [Files](#files)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
@@ -25,6 +26,15 @@ A standardised approach for developing AngularJS applications in teams. This sty
   1. [Angular wrapper references](#angular-wrapper-references)
   1. [Comment standards](#comment-standards)
   1. [Minification and annotation](#minification-and-annotation)
+
+## General
+  - When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
+  - Don't wrap element inside of $(). All AngularJS elements are already jqobjects.
+  - Do not pollute your $scope. Only add functions and variables that are being used in the templates.
+  - Do not use $ prefix for the names of variables, properties and methods. This prefix is reserved for AngularJS usage.
+  - Use ng-bind or ng-cloak instead of simple {{ }} to prevent a FOUC (Flash of Unrendered Content).
+  - When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
+  - When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
 
 ## Files
   - **One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
