@@ -45,9 +45,10 @@ A standardised approach for developing AngularJS applications in teams. This sty
     ]); 
    ```
    
- - **^Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
+
+  - **^Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
  
- - **^Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
+  - **^Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
  
     ```javascript
     function LocationsListingCtrl($scope) {
