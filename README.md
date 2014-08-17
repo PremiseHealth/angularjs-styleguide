@@ -74,7 +74,12 @@ A standardised approach for developing AngularJS applications in teams. This sty
     --/src
     ----index.html (the index.html for the SPA)
     ----app.js (the app definition for the Angular app)
-    ----/app
+    ----/assets (images)
+    ------logo.png
+    ----/less (LESS files for things other than pages/directives)
+    ------main.less (the main LESS file for the app. Should import LESS files from directives & pages
+    ------variables.less
+    ----/app (angular app files)
     ------/components (directives go here)
     --------/myDirective (directory for myDirective directive
     ----------myDirective.js (directive file)
