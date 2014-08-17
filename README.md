@@ -13,6 +13,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
 
 ## Table of Contents
 
+  1. [Files](#files)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
   1. [Services and Factory](#services-and-factory)
@@ -25,6 +26,24 @@ A standardised approach for developing AngularJS applications in teams. This sty
   1. [Comment standards](#comment-standards)
   1. [Minification and annotation](#minification-and-annotation)
 
+## Files
+  - **One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
+
+  - **Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
+   ```javascript
+    .module('locAdmin.components.locationsListing.locationsListingCtrl', [
+    ]); 
+   ```
+   
+ - **Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
+ 
+ - **Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
+ 
+    ```javascript
+    function LocationsListingCtrl($scope) {
+    }
+    ```
+    
 ## Modules
 
   - **Definitions**: Declare modules without a variable using the setter and getter syntax
