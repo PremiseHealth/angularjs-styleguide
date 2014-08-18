@@ -90,7 +90,7 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
     ----------myDirective.js (directive file)
     ----------myDirective.tpl.html (directive template/partial)
     ----------myDirectiveCtrl.js (the directive's controller)
-    ----------myDirectiveService.js (if directive requires a service, used ONLY be this directive)
+    ----------myDirectiveService.js (if directive requires a service, used ONLY by this directive)
     ----------myDirective.less (LESS file for this directive, if needed)
     ------/pages (top level pages/views go here. Subdirectories follow the same logic as the directives directory)
     --------/main (the main page/view)
