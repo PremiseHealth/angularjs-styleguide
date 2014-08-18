@@ -39,6 +39,9 @@ A standardised approach for developing AngularJS applications in teams. This sty
   - ^When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
 
 ## Files
+
+Note: Some of these opinions about file structure, naming, etc are due to the fact that I use and recommend [Browserify](http://browserify.org/) as part the build process.
+
   - **^One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
 
   - **^Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
