@@ -37,6 +37,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
   - ^Use ng-bind or ng-cloak instead of simple {{ }} to prevent a FOUC (Flash of Unrendered Content).
   - ^When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
   - ^When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
+  - ^Avoid using $rootScope. It's ok to use $rootScope for emitting an event, but storing data on the $rootScope should be avoided. Use a service for your data instead.
 
 ## Files
 
