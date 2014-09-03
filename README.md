@@ -39,6 +39,7 @@ A standardised approach for developing AngularJS applications in teams. This sty
   - ^When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
   - ^When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
   - ^Avoid using $rootScope. It's ok to use $rootScope for emitting an event, but storing data on the $rootScope should be avoided. Use a service for your data instead.
+  - ^When possible, avoid using "magic strings" by using Angular's constant service. More details on this [blog post](http://jmcunningham.net/2014/09/03/angularjs-use-constant-service-instead-of-magic-strings/).
 
 ## Files
 
