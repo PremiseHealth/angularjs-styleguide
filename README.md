@@ -417,11 +417,12 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
   - Example:
   
   ```
-  /components/listing.js (the directive)
-  /components/listing.tpl.html (the template/partial for the directive)
-  /components/listingService.js (if the directive needs a service, used ONLY be this directive)
-  /components/listingCtrl.js (the controller for this directive)
+  /components/listing/listing.js (the directive)
+  /components/listing/listing.tpl.html (the template/partial for the directive)
+  /components/listing/listingService.js (if the directive needs a service, used ONLY be this directive)
+  /components/listing/listingCtrl.js (the controller for this directive)
   ```
+
   - **^Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
 
 **[Back to top](#table-of-contents)**
