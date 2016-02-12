@@ -1,19 +1,14 @@
 # AngularJS Best Practices & Style Guide
 
-NOTE: This styleguide is forked from Todd Motto's version and I've left his comments in place below. However, I have removed some things, and added some others. A couple of months ago, I created my own list of Best Practices by grabbing ideas from several public style guides. Then I added some rules from my own personal experience and those of my coworkers. I had planned to convert my Word doc to a GitHub repo. After seeing Todd's style guide, I noticed some commonalities and also many new things in his guide that I really liked. Once Todd moved his list to GitHub, I thought it made more sense to fork his repo, and use it as the base for mine (instead of starting from scratch, since he has many ideas I like). My additions/modifications are noted with a ^
+Note: The updated version of this guide is still very much a Work in Progress.
 
-UPDATE: I added a sample project that follows most of these best practices: [angularBPSeed] (https://github.com/jmcunningham/angularBPSeed)
+This styleguide was forked from Todd Motto's version in August of 2014. A lot of things have changed since then, including the recent release of Angular 1.5. This styleguide is being updated to include best practices as of February 2016, including best practices for preparing an Angular 1.x app for an eventual upgrade to Angular 2.
 
-Todd's Comments Below:
+This will be an opinionated guide for how we (Premise Health) develop our Angular apps. Some of the ideas will be ours, and some/many will come from various members of the Angular community. We'll give a shout out below to thank those whose inspired our guide.
 
-*Opinionated AngularJS styleguide for teams by [@toddmotto](//twitter.com/toddmotto)*
-
-A standardised approach for developing AngularJS applications in teams. This styleguide touches on concepts, syntax, conventions and is based on my experience [writing](http:////toddmotto.com) about, [talking](https://speakerdeck.com/toddmotto) about, and building Angular applications.
-
-#### Community
-[John Papa](//twitter.com/John_Papa) and I have discussed in-depth styling patterns for Angular and as such have both released separate styleguides. Thanks to those discussions, I've learned some great tips from John that have helped shape this guide. We've both created our own take on a styleguide. I urge you to [check his out](//github.com/johnpapa/angularjs-styleguide) to compare thoughts.
-
-> See the [original article](http://toddmotto.com/opinionated-angular-js-styleguide-for-teams) that sparked this off
+Special thanks to:
+* [John Papa's Styleguide] (https://github.com/johnpapa/angular-styleguide)
+* [Todd Moto's Styleguide] (https://github.com/toddmotto/angular-styleguide)
 
 ## Table of Contents
 
