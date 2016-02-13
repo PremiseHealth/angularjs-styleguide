@@ -55,20 +55,20 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
     function LocationsListingCtrl($scope) {
     }
     ```
-  - **^Each file should be CommonJS compatible**: This means using module.exports and require(). Further explanations [here]( http://spinejs.com/docs/commonjs) (change the dropdown from Coffeescript to JavaScript to change the source code on that page). Note that at some point in the future this recommendation may switch to ES6 Modules, using the ES6 Module transpiler from Square (or traceur).
+  - **^Each file should be ES6 module compatible**: This means using export and import. 
   
    ```javascript
     // recommended
     function LocationsListingCtrl() {  
     }  
    	  
-    module.exports = angular
+    export default angular
       .module('locAdmin.components.locationsListing.locationsListingCtrl', [                           
         require('./locationsListingService').name  
       ])  
       .controller('LocationsListingCtrl', LocationsListingCtrl);
    ```
-  - **^Directory structure**
+  - **^Directory structure** TODO: Update to replace less with sass
     
     ```
     /MyProject
@@ -77,8 +77,8 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
     ----app.js (the app definition for the Angular app)
     ----/assets (images)
     ------logo.png
-    ----/less (LESS files for things other than pages/directives)
-    ------main.less (the main LESS file for the app. Should import LESS files from directives & pages
+    ----/less (less files for things other than pages/directives)
+    ------main.less (the main less file for the app. Should import LESS files from directives & pages
     ------variables.less
     ----/app (angular app files)
     ------/components (directives go here)
@@ -136,13 +136,9 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
     function MainCtrl () {
 
     }
-    function SomeService () {
-
-    }
     angular
       .module('app', [])
-      .controller('MainCtrl', MainCtrl)
-      .service('SomeService', SomeService);
+      .controller('MainCtrl', MainCtrl);
     ```
 
   - This aids with readability and reduces the volume of code "wrapped" inside the Angular framework
