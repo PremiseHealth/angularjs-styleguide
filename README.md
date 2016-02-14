@@ -27,35 +27,35 @@ Special thanks to:
   1. [Minification and annotation](#minification-and-annotation)
 
 ## General
-  - ^When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
-  - ^Don't wrap element inside of $(). All AngularJS elements are already jqobjects.
-  - ^Do not use $ prefix for the names of variables, properties and methods. This prefix is reserved for AngularJS usage.
-  - ^When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
-  - ^When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
-  - ^Avoid using $rootScope. It's ok to use $rootScope for emitting an event, but storing data on the $rootScope should be avoided. Use a service for your data instead.
+  - When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
+  - Don't wrap element inside of $(). All AngularJS elements are already jqobjects.
+  - Do not use $ prefix for the names of variables, properties and methods. This prefix is reserved for AngularJS usage.
+  - When you need to set the src of an image dynamically use ng-src instead of src with {{}}.
+  - When you need to set the href of an anchor tag dynamically use ng-href instead of href with {{}}
+  - Avoid using $rootScope. It's ok to use $rootScope for emitting an event, but storing data on the $rootScope should be avoided. Use a service for your data instead.
 
 ## Files
 
 Note: Some of these opinions about file structure, naming, etc are due to the fact that I use and recommend [Browserify](http://browserify.org/) as part the build process.
 
-  - **^One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
+  - **One module per file**: Each file should have only one module definition. Exceptions are your app definition file (usually app.js), and any modules that need a config module.
 
-  - **^Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
+  - **Each file should get its own namespace**: The namespace should follow its directory structure. The module namespace is /<project name>/path/to/file. Note that you leave the src root out of the filepath (the src root is typically /app). Ex: If your project is called LocAdmin, your file is a controller for the LocationsListing directive and is named LocationsListingCtrl it will likely have the following path on your filesystem: /LocAdmin/app/components/locationsListing. 
    ```javascript
     .module('locAdmin.components.locationsListing.locationsListingCtrl', [
     ]); 
    ```
    
 
-  - **^Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
+  - **Each filename should match the controller/service/etc name**: A file with a .controller(‘mainCtrl’) definition should be named mainCtrl.js
  
-  - **^Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
+  - **Function name and file name should match**: Given the the function definition below, you would name your file locationsListingCtrl.js. Note that filenames should start with a lowercase letter.
  
     ```javascript
     function LocationsListingCtrl($scope) {
     }
     ```
-  - **^Each file should be ES6 module compatible**: This means using export and import. 
+  - **Each file should be ES6 module compatible**: This means using export and import. 
   
    ```javascript
     // recommended
@@ -68,7 +68,7 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
       ])  
       .controller('LocationsListingCtrl', LocationsListingCtrl);
    ```
-  - **^Directory structure** TODO: Update to replace less with sass
+  - **Directory structure** TODO: Update to replace less with sass
     
     ```
     /MyProject
@@ -193,7 +193,7 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
   - Only use `$scope` in `controllerAs` when necessary; for example, publishing and subscribing events using `$emit`, `$broadcast`, `$on` or `$watch`. Try to limit the use of these, however, and treat `$scope` as a special use case
 
   
-  - **^controllerAs 'self'**: Capture the `this` context of the Controller using `self' (this is further explanation of MainCtrlTwo() in the example above)
+  - **controllerAs 'self'**: Capture the `this` context of the Controller using `self' (this is further explanation of MainCtrlTwo() in the example above)
 
     ```javascript
     // avoid
@@ -259,7 +259,185 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
     ```
 
     *Why?* : Controllers should fetch Model data from Services, avoiding any Business logic. Controllers should act as a ViewModel and control the data flowing between the Model and the View presentational layer. Business logic in Controllers makes testing Services impossible.
+    
+  **Bindable Members Up Top**
+  - Place bindable members at the top of the controller, alphabetized, and not spread through the controller code.
 
+    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View.
+
+    *Why?*: Setting anonymous functions in-line can be easy, but when those functions are more than 1 line of code they can reduce the readability. Defining the functions below the bindable members (the functions will be hoisted) moves the implementation details down, keeps the bindable members up top, and makes it easier to read.
+
+  ```javascript
+  /* avoid */
+  function SessionsController() {
+      var vm = this;
+
+      vm.gotoSession = function() {
+        /* ... */
+      };
+      vm.refresh = function() {
+        /* ... */
+      };
+      vm.search = function() {
+        /* ... */
+      };
+      vm.sessions = [];
+      vm.title = 'Sessions';
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  function SessionsController() {
+      var vm = this;
+
+      vm.gotoSession = gotoSession;
+      vm.refresh = refresh;
+      vm.search = search;
+      vm.sessions = [];
+      vm.title = 'Sessions';
+
+      ////////////
+
+      function gotoSession() {
+        /* */
+      }
+
+      function refresh() {
+        /* */
+      }
+
+      function search() {
+        /* */
+      }
+  }
+  ```
+  **Function Declarations to Hide Implementation Details**
+  - Use function declarations to hide implementation details. Keep your bindable members up top. When you need to bind a function in a controller, point it to a function declaration that appears later in the file. This is tied directly to the section Bindable Members Up Top. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code/).
+
+    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View. (Same as above.)
+
+    *Why?*: Placing the implementation details of a function later in the file moves that complexity out of view so you can see the important stuff up top.
+
+    *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
+
+    *Why?*: You never have to worry with function declarations that moving `var a` before `var b` will break your code because `a` depends on `b`.
+
+    *Why?*: Order is critical with function expressions
+
+  ```javascript
+  /**
+   * avoid
+   * Using function expressions.
+   */
+  function AvengersController(avengersService, logger) {
+      var vm = this;
+      vm.avengers = [];
+      vm.title = 'Avengers';
+
+      var activate = function() {
+          return getAvengers().then(function() {
+              logger.info('Activated Avengers View');
+          });
+      }
+
+      var getAvengers = function() {
+          return avengersService.getAvengers().then(function(data) {
+              vm.avengers = data;
+              return vm.avengers;
+          });
+      }
+
+      vm.getAvengers = getAvengers;
+
+      activate();
+  }
+  ```
+
+  Notice that the important stuff is scattered in the preceding example. In the example below, notice that the important stuff is up top. For example, the members bound to the controller such as `vm.avengers` and `vm.title`. The implementation details are down below. This is just easier to read.
+
+  ```javascript
+  /*
+   * recommend
+   * Using function declarations
+   * and bindable members up top.
+   */
+  function AvengersController(avengersService, logger) {
+      var vm = this;
+      vm.avengers = [];
+      vm.getAvengers = getAvengers;
+      vm.title = 'Avengers';
+
+      activate();
+
+      function activate() {
+          return getAvengers().then(function() {
+              logger.info('Activated Avengers View');
+          });
+      }
+
+      function getAvengers() {
+          return avengersService.getAvengers().then(function(data) {
+              vm.avengers = data;
+              return vm.avengers;
+          });
+      }
+  }
+  ```
+  
+  **Assigning Controllers**
+  - When a controller must be paired with a view and either component may be re-used by other controllers or views, define controllers along with their routes.
+
+    Note: If a View is loaded via another means besides a route, then use the `ng-controller="Avengers as vm"` syntax.
+
+    *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`ng-controller`](https://docs.angularjs.org/api/ng/directive/ngController), that view is always associated with the same controller.
+
+ ```javascript
+  /* avoid - when using with a route and dynamic pairing is desired */
+
+  // route-config.js
+  angular
+      .module('app')
+      .config(config);
+
+  function config($routeProvider) {
+      $routeProvider
+          .when('/avengers', {
+            templateUrl: 'avengers.html'
+          });
+  }
+  ```
+
+  ```html
+  <!-- avengers.html -->
+  <div ng-controller="AvengersController as vm">
+  </div>
+  ```
+
+  ```javascript
+  /* recommended */
+
+  // route-config.js
+  angular
+      .module('app')
+      .config(config);
+
+  function config($routeProvider) {
+      $routeProvider
+          .when('/avengers', {
+              templateUrl: 'avengers.html',
+              controller: 'Avengers',
+              controllerAs: 'ctrl'
+          });
+  }
+  ```
+
+  ```html
+  <!-- avengers.html -->
+  <div>
+  </div>
+  ```
+  
 **[Back to top](#table-of-contents)**
 
 ## Services and Factory
