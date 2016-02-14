@@ -437,7 +437,48 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
   <div>
   </div>
   ```
-  
+  **Controller Activation Promises**
+  - Resolve start-up logic for a controller in an `activate` function.
+
+    *Why?*: Placing start-up logic in a consistent place in the controller makes it easier to locate, more consistent to test, and helps avoid spreading out the activation logic across the controller.
+
+    *Why?*: The controller `activate` makes it convenient to re-use the logic for a refresh for the controller/View, keeps the logic together, gets the user to the View faster, makes animations easy on the `ng-view` or `ui-view`, and feels snappier to the user.
+
+    Note: If you need to conditionally cancel the route before you start using the controller, use a [route resolve](#style-y081) instead.
+
+  ```javascript
+  /* avoid */
+  function AvengersController(dataservice) {
+      var vm = this;
+      vm.avengers = [];
+      vm.title = 'Avengers';
+
+      dataservice.getAvengers().then(function(data) {
+          vm.avengers = data;
+          return vm.avengers;
+      });
+  }
+  ```
+
+  ```javascript
+  /* recommended */
+  function AvengersController(dataservice) {
+      var vm = this;
+      vm.avengers = [];
+      vm.title = 'Avengers';
+
+      activate();
+
+      ////////////
+
+      function activate() {
+          return dataservice.getAvengers().then(function(data) {
+              vm.avengers = data;
+              return vm.avengers;
+          });
+      }
+  }
+  ```
 **[Back to top](#table-of-contents)**
 
 ## Services and Factory
