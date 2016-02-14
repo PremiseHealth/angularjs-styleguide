@@ -580,7 +580,7 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
       .module('app')
       .directive('dragUpload', dragUpload);
     ```
-  - **^Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
+  - **Each directive should live in its own directory**: This directory will include the directive js file, the template, and any services that are specific to the directive. The parent director for all directives is typically /components.
   - Example:
   
   ```
@@ -590,7 +590,59 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
   /components/listing/listingCtrl.js (the controller for this directive)
   ```
 
-  - **^Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
+  - **Use isolate scope in directives whenever possible**: This isn't an absolute, hence the _whenever possible_ phrase. Allowing directives to rely on inherited/shared scope can make the code brittle. Be explicit about what data your directive needs by passing it into the scope. Note that workarounds can be found if you have an element with multiple directives (since Angular only allows 1 directive per element to have an isolate scope).
+  
+  - **Provide a Unique Directive Prefix**
+  Provide a short, unique and descriptive directive prefix such as `acmeSalesCustomerInfo` which would be declared in HTML as `acme-sales-customer-info`.
+
+    *Why?*: The unique short prefix identifies the directive's context and origin. For example a prefix of `cc-` may indicate that the directive is part of a CodeCamper app while `acme-` may indicate a directive for the Acme company.
+
+  - **Use bindToController when using 'controller as'**
+  Use `bindToController = true` when using `controller as` syntax with a directive when you want to bind the outer scope to the directive's controller's scope.
+
+    *Why?*: It makes it easy to bind outer scope to the directive's controller scope.
+
+    Note: `bindToController` was introduced in Angular 1.3.0.
+
+  ```html
+  <div my-example max="77"></div>
+  ```
+
+  ```javascript
+  angular
+      .module('app')
+      .directive('myExample', myExample);
+
+  function myExample() {
+      var directive = {
+          restrict: 'EA',
+          templateUrl: 'app/feature/example.directive.html',
+          scope: {
+              max: '='
+          },
+          controller: ExampleController,
+          controllerAs: 'ctrl',
+          bindToController: true
+      };
+
+      return directive;
+  }
+
+  function ExampleController() {
+      var self = this;
+      self.min = 3;
+      console.log('CTRL: ctrl.min = %s', ctrl.min);
+      console.log('CTRL: ctrl.max = %s', ctrl.max);
+  }
+  ```
+
+  ```html
+  <!-- example.directive.html -->
+  <div>hello world</div>
+  <div>max={{ctrl.max}}<input ng-model="ctrl.max"/></div>
+  <div>min={{ctrl.min}}<input ng-model="ctrl.min"/></div>
+  ```
+
 
 **[Back to top](#table-of-contents)**
 
