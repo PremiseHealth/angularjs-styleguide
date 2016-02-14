@@ -24,7 +24,8 @@ Special thanks to:
   1. [Performance](#performance)
   1. [Angular wrapper references](#angular-wrapper-references)
   1. [Comment standards](#comment-standards)
-  1. [Minification and annotation](#minification-and-annotation)
+  1. [Dependencies](#dependencies)
+  2. [Start Up Logic](#start-up-logic)
 
 ## General
   - When possible, use angular.element(), etc. instead of jQuery lookups and DOM manipulation.
@@ -765,6 +766,50 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
   
     ```
 
+  **Route Errors**
+
+  - Handle and log all routing errors using [`$routeChangeError`](https://docs.angularjs.org/api/ngRoute/service/$route#$routeChangeError).
+
+    *Why?*: Provides a consistent way to handle all routing errors.
+
+    *Why?*: Potentially provides a better user experience if a routing error occurs and you route them to a friendly screen with more details or recovery options.
+
+    ```javascript
+    /* recommended */
+    var handlingRouteChangeError = false;
+
+    function handleRoutingErrors() {
+        /**
+         * Route cancellation:
+         * On routing error, go to the dashboard.
+         * Provide an exit clause if it tries to do it twice.
+         */
+        $rootScope.$on('$routeChangeError',
+            function(event, current, previous, rejection) {
+                if (handlingRouteChangeError) { return; }
+                handlingRouteChangeError = true;
+                var destination = (current && (current.title ||
+                    current.name || current.loadedTemplateUrl)) ||
+                    'unknown target';
+                var msg = 'Error routing to ' + destination + '. ' +
+                    (rejection.msg || '');
+
+                /**
+                 * Optionally log using a custom service or $log.
+                 * (Don't forget to inject custom service)
+                 */
+                logger.warning(msg, [current]);
+
+                /**
+                 * On routing error, go to another route/state.
+                 */
+                $location.path('/');
+
+            }
+        );
+    }
+    ```
+
  
 **[Back to top](#table-of-contents)**
 
@@ -910,38 +955,157 @@ Note: Some of these opinions about file structure, naming, etc are due to the fa
 
 **[Back to top](#table-of-contents)**
 
-## Minification and annotation
+## Dependencies
 
-  - **ng-annotate**: Use [ng-annotate](//github.com/olov/ng-annotate) for Gulp as `ng-min` is deprecated, and comment functions that need automated dependency injection using `/** @ngInject */`
+  **Manually Identify Dependencies**
 
-    ```javascript
-    /**
-     * @ngInject
-     */
-    function MainCtrl (SomeService) {
-      this.doSomething = SomeService.doSomething;
-    }
-    angular
-      .module('app')
-      .controller('MainCtrl', MainCtrl);
-    ```
+  - Use `$inject` to manually identify your dependencies for Angular components.
 
-  - Which produces the following output with the `$inject` annotation
+    *Why?*: This technique mirrors the technique used by [`ng-annotate`](https://github.com/olov/ng-annotate), which I recommend for automating the creation of minification safe dependencies. If `ng-annotate` detects injection has already been made, it will not duplicate it.
+
+    *Why?*: This safeguards your dependencies from being vulnerable to minification issues when parameters may be mangled. For example, `common` and `dataservice` may become `a` or `b` and not be found by Angular.
+
+    *Why?*: Avoid creating in-line dependencies as long lists can be difficult to read in the array. Also it can be confusing that the array is a series of strings while the last item is the component's function.
 
     ```javascript
-    /**
-     * @ngInject
-     */
-    function MainCtrl (SomeService) {
-      this.doSomething = SomeService.doSomething;
-    }
-    MainCtrl.$inject = ['SomeService'];
+    /* avoid */
+    angular
+        .module('app')
+        .controller('DashboardController',
+            ['$location', '$routeParams', 'common', 'dataservice',
+                function Dashboard($location, $routeParams, common, dataservice) {}
+            ]);
+    ```
+
+    ```javascript
+    /* avoid */
     angular
       .module('app')
-      .controller('MainCtrl', MainCtrl);
+      .controller('DashboardController',
+          ['$location', '$routeParams', 'common', 'dataservice', Dashboard]);
+
+    function Dashboard($location, $routeParams, common, dataservice) {
+    }
     ```
+
+    ```javascript
+    /* recommended */
+    angular
+        .module('app')
+        .controller('DashboardController', DashboardController);
+
+    DashboardController.$inject = ['$location', '$routeParams', 'common', 'dataservice'];
+
+    function DashboardController($location, $routeParams, common, dataservice) {
+    }
+    ```
+
+    Note: When your function is below a return statement the `$inject` may be unreachable (this may happen in a directive). You can solve this by moving the Controller outside of the directive.
+
+    ```javascript
+    /* avoid */
+    // inside a directive definition
+    function outer() {
+        var ddo = {
+            controller: DashboardPanelController,
+            controllerAs: 'vm'
+        };
+        return ddo;
+
+        DashboardPanelController.$inject = ['logger']; // Unreachable
+        function DashboardPanelController(logger) {
+        }
+    }
+    ```
+
+    ```javascript
+    /* recommended */
+    // outside a directive definition
+    function outer() {
+        var ddo = {
+            controller: DashboardPanelController,
+            controllerAs: 'vm'
+        };
+        return ddo;
+    }
+
+    DashboardPanelController.$inject = ['logger'];
+    function DashboardPanelController(logger) {
+    }
+    ```
+
+  **Module Dependencies**
+
+  - The application root module depends on the app specific feature modules and any shared or reusable modules.
+
+    ![Modularity and Dependencies](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/modularity-1.png)
+
+    *Why?*: The main app module contains a quickly identifiable manifest of the application's features.
+
+    *Why?*: Each feature area contains a manifest of what it depends on, so it can be pulled in as a dependency in other applications and still work.
+
+    *Why?*: Intra-App features such as shared data services become easy to locate and share from within `app.core` (choose your favorite name for this module).
+
+    Note: This is a strategy for consistency. There are many good options here. Choose one that is consistent, follows Angular's dependency rules, and is easy to maintain and scale.
+
+    > My structures vary slightly between projects but they all follow these guidelines for structure and modularity. The implementation may vary depending on the features and the team. In other words, don't get hung up on an exact like-for-like structure but do justify your structure using consistency, maintainability, and efficiency in mind.
+
+    > In a small app, you can also consider putting all the shared dependencies in the app module where the feature modules have no direct dependencies. This makes it easier to maintain the smaller application, but makes it harder to reuse modules outside of this application.
 
 **[Back to top](#table-of-contents)**
+
+## Start Up Logic
+
+  **Configuration**
+
+  - Inject code into [module configuration](https://docs.angularjs.org/guide/module#module-loading-dependencies) that must be configured before running the angular app. Ideal candidates include providers and constants.
+
+    *Why?*: This makes it easier to have less places for configuration.
+
+  ```javascript
+  angular
+      .module('app')
+      .config(configure);
+
+  configure.$inject =
+      ['routerHelperProvider', 'exceptionHandlerProvider', 'toastr'];
+
+  function configure (routerHelperProvider, exceptionHandlerProvider, toastr) {
+      exceptionHandlerProvider.configure(config.appErrorPrefix);
+      configureStateHelper();
+
+      toastr.options.timeOut = 4000;
+      toastr.options.positionClass = 'toast-bottom-right';
+
+      ////////////////
+
+      function configureStateHelper() {
+          routerHelperProvider.configure({
+              docTitle: 'NG-Modular: '
+          });
+      }
+  }
+  ```
+
+  **Run Blocks**
+
+  - Any code that needs to run when an application starts should be declared in a factory, exposed via a function, and injected into the [run block](https://docs.angularjs.org/guide/module#module-loading-dependencies).
+
+    *Why?*: Code directly in a run block can be difficult to test. Placing in a factory makes it easier to abstract and mock.
+
+  ```javascript
+  angular
+      .module('app')
+      .run(runBlock);
+
+  runBlock.$inject = ['authenticator', 'translator'];
+
+  function runBlock(authenticator, translator) {
+      authenticator.initialize();
+      translator.initialize();
+  }
+  ```
+  **[Back to top](#table-of-contents)**
 
 ## Angular docs
 For anything else, including API reference, check the [Angular documentation](//docs.angularjs.org/api).
